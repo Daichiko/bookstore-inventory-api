@@ -1,98 +1,111 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 📚 Bookstore Inventory API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Bienvenido al proyecto **Bookstore Inventory API**, una aplicación backend desarrollada con **NestJS** y **Prisma** (utilizando **PostgreSQL**). Este proyecto está completamente **dockerizado** para asegurar un entorno de desarrollo consistente.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🚀 1. Requisitos del Sistema
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Node.js:** Versión utilizada **24.11.1** (o superior).
+- **Gestor de Paquetes:** `npm`.
+- **Docker:** Necesario para la ejecución dockerizada.
+- **PostgreSQL:** Requerido si se ejecuta la aplicación sin Docker.
+- **Exchangerate:** Se debe colocar la key asociada a una cuenta de Exchangerate en las enviroment.
 
-## Project setup
+---
 
-```bash
-$ npm install
+## 🐳 2. Ejecución con Docker (Recomendado)
+
+La forma más rápida y recomendada de levantar el entorno es usando **Docker Compose**, ya que gestiona la base de datos PostgreSQL, las migraciones y la aplicación NestJS automáticamente.
+
+### A. Archivos de Configuración
+
+Asegúrate de tener un archivo **`.env`** en la raíz del proyecto con las siguientes variables:
+
+```ini
+# .env file
+
+# Base de Datos (PostgreSQL Container)
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=123456
+POSTGRES_DB=bookstore-inventory
+
+# Conexión interna de la aplicación (apunta al servicio 'db')
+DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
+
+# Variables de la Aplicación
+PORT=3001
+API_EXCHANGE_URL="https://v6.exchangerate-api.com/v6/key/latest/USD"
 ```
 
-## Compile and run the project
+> **Nota sobre el puerto:** Debido a la naturaleza de PostgreSql para tomar el puerto `5432` por naturaleza se opto por el puerto `5433` como salida del contenedor. La aplicación interna **siempre** se conecta a `db:5432`.
+
+### B. Comandos de Inicio
+
+Ejecuta el siguiente comando en la raíz del proyecto para construir las imágenes, levantar los contenedores, aplicar las migraciones de Prisma y arrancar el servidor en modo _watch_:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker-compose up --build
 ```
 
-## Run tests
+| Resultado  | Puerto                |
+| ---------- | --------------------- |
+| API NestJS | http://localhost:3001 |
+| PostgreSQL | localhost:5433        |
 
-```bash
-# unit tests
-$ npm run test
+---
 
-# e2e tests
-$ npm run test:e2e
+## 💻 3. Ejecución Sin Docker
 
-# test coverage
-$ npm run test:cov
+Si deseas correr la aplicación directamente en tu sistema operativo, debes tener una instancia de PostgreSQL corriendo localmente.
+
+**A. Base de Datos (Local)**
+
+Asegúrate de que tienes una base de datos PostgreSQL corriendo en localhost:5432 y una base de datos llamada bookstore-inventory.
+
+**B. Archivos de Configuración**
+
+Crea un archivo .env con las siguientes variables:
+
+```ini
+# .env file
+
+# Variables de la Aplicación
+PORT=3001
+API_EXCHANGE_URL="https://v6.exchangerate-api.com/v6/key/latest/USD"
+
+# Conexión local de la aplicación (apunta a localhost)
+DATABASE_URL="postgresql://postgres:123456@localhost:5432/bookstore-inventory"
 ```
 
-## Deployment
+**C. Comandos de Ejecución**
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Sigue estos pasos para instalar dependencias, generar el cliente Prisma y levantar el servidor:
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Instalar dependencias:
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```shell
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Generar Cliente Prisma:
 
-## Resources
+```shell
+npx prisma generate
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Aplicar Migraciones de Prisma:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```shell
+npx prisma migrate dev --name init
+```
 
-## Support
+Iniciar la Aplicación (Modo Desarrollo):
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```shell
+npm run start:dev
+```
 
-## Stay in touch
+La API estará disponible en http://localhost:3001.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+> **Nota Postman:** El repositorio posee un archivo denominado `Bookstore Inventory API - CRUD.postman_collection.json` el cual se puede importar en postman para un uso rapido de los endpoints, de igual manera el sistema cuenta con swagger en la ruta `http://localhost:3001/api/docs`.
