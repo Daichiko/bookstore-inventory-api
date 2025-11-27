@@ -192,7 +192,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"currency\": \"VES\",\r\n  \"conversion_rate_manual\": 250, //opcional\r\n  \"profit_margin_manual\": 0.4 //opcional\r\n}",
+					"raw": "{\r\n  \"currency\": \"VES\", //opcional toma por defecto VES\r\n  \"conversion_rate_manual\": 250, //opcional\r\n  \"profit_margin_manual\": 0.4 //opcional\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
