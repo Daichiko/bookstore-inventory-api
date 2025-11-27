@@ -37,8 +37,7 @@ export class CreateBookDto {
   @ApiProperty({
     description:
       'Costo de adquisición del libro en dólares (USD). Debe ser positivo y acepta hasta 4 decimales.',
-    example: '15.99',
-    type: 'string',
+    example: 15.99,
   })
   @Min(0.01, {
     message: 'El costo en USD debe ser un valor positivo (mayor que 0).',
@@ -49,10 +48,9 @@ export class CreateBookDto {
 
   @ApiProperty({
     description:
-      'Precio de venta del libro en moneda local. Opcional. Acepta hasta 4 decimales.',
-    example: '25.50',
+      'Precio de venta del libro en moneda local. Opcional. Acepta hasta 4 decimales. (OPCIONAL)',
+    example: 25.5,
     required: false,
-    type: 'string',
   })
   @IsOptional()
   @IsNumber({}, { message: 'El costo en USD debe ser un número.' })
