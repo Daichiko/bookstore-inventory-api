@@ -94,11 +94,14 @@ export class BooksService {
       });
 
       if (!book) {
-        // 🚨 CAMBIO A 404
         throw new NotFoundException(`No se encontró el libro con ID ${id}.`);
       }
       return book;
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
       console.error(`Error al obtener el libro con id ${id}:`, error);
       throw new InternalServerErrorException(
         'Error al obtener el libro. Intente nuevamente más tarde.',
