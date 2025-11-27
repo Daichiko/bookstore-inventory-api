@@ -272,11 +272,11 @@ export class BooksService {
 
     return {
       book_id: bookId,
-      cost_usd: book.costUsd,
+      cost_usd: Number(book.costUsd),
       exchange_rate: conversion_rate,
-      cost_local: Number(book.costUsd) * conversion_rate,
+      cost_local: Number((Number(book.costUsd) * conversion_rate).toFixed(4)),
       margin_percentage: profit_margin * 100,
-      selling_price_local: newBook.sellingPriceLocal,
+      selling_price_local: Number(book.costUsd) * (profit_margin + 1),
       currency,
       calculation_timestamp: new Date(),
     };
