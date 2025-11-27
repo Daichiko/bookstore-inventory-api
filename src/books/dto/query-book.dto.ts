@@ -21,6 +21,7 @@ export class calculatePriceDto {
     required: false,
   })
   @IsString({ message: 'La moneda debe ser una cadena de texto.' })
+  @IsOptional()
   currency: string;
 
   @ApiPropertyOptional({
