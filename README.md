@@ -10,7 +10,7 @@ Bienvenido al proyecto **Bookstore Inventory API**, una aplicación backend desa
 - **Gestor de Paquetes:** `npm`.
 - **Docker:** Necesario para la ejecución dockerizada.
 - **PostgreSQL:** Requerido si se ejecuta la aplicación sin Docker.
-- **Exchangerate:** Se debe colocar la key asociada a una cuenta de Exchangerate en las enviroment.
+- **Exchangerate:** Se debe colocar la key asociada a una cuenta de Exchangerate en las enviroment (https://v6.exchangerate-api.com/v6/KEY/latest/USD).
 
 ---
 
