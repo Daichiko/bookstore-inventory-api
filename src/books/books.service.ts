@@ -185,7 +185,12 @@ export class BooksService {
 
     try {
       return await this.prisma.book.findMany({
-        where: { category },
+        where: {
+          category: {
+            contains: category,
+            mode: 'insensitive',
+          },
+        },
       });
     } catch (error) {
       console.error('Error al buscar libros por categoría:', error);
