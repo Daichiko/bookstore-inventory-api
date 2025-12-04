@@ -18,29 +18,9 @@ Bienvenido al proyecto **Bookstore Inventory API**, una aplicación backend desa
 
 La forma más rápida y recomendada de levantar el entorno es usando **Docker Compose**, ya que gestiona la base de datos PostgreSQL, las migraciones y la aplicación NestJS automáticamente.
 
-### A. Archivos de Configuración
+> **Nota sobre el puerto:** Debido a la naturaleza de PostgreSql para tomar el puerto `5432` se opto por el puerto `5433` como salida del contenedor para evitar inconvenientes si se tiene postgresql instalado. La aplicación interna **siempre** se conecta a `db:5432`.
 
-Asegúrate de tener un archivo **`.env`** en la raíz del proyecto con las siguientes variables:
-
-```ini
-# .env file
-
-# Base de Datos (PostgreSQL Container)
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=123456
-POSTGRES_DB=bookstore-inventory
-
-# Conexión interna de la aplicación (apunta al servicio 'db')
-DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
-
-# Variables de la Aplicación
-PORT=3001
-API_EXCHANGE_URL="https://v6.exchangerate-api.com/v6/key/latest/USD"
-```
-
-> **Nota sobre el puerto:** Debido a la naturaleza de PostgreSql para tomar el puerto `5432` por naturaleza se opto por el puerto `5433` como salida del contenedor. La aplicación interna **siempre** se conecta a `db:5432`.
-
-### B. Comandos de Inicio
+### Comandos de Inicio
 
 Ejecuta el siguiente comando en la raíz del proyecto para construir las imágenes, levantar los contenedores, aplicar las migraciones de Prisma y arrancar el servidor en modo _watch_:
 
@@ -60,29 +40,10 @@ docker-compose up --build
 Si deseas correr la aplicación directamente en tu sistema operativo, debes tener una instancia de PostgreSQL corriendo localmente.
 
 **A. Base de Datos (Local)**
+A
+Asegúrate de que tienes una base de datos PostgreSQL el sistema se encargara de crear la base de datos necesaria en caso de ser necesario.
 
-Asegúrate de que tienes una base de datos PostgreSQL corriendo en localhost:5432 y una base de datos llamada bookstore-inventory.
-
-**B. Archivos de Configuración**
-
-Crea un archivo .env con las siguientes variables:
-
-```ini
-# .env file
-
-# Variables de la Aplicación
-PORT=3001
-API_EXCHANGE_URL="https://v6.exchangerate-api.com/v6/key/latest/USD"
-
-# Conexión local de la aplicación (apunta a localhost)
-DATABASE_URL="postgresql://postgres:123456@localhost:5432/bookstore-inventory"
-```
-
-**C. Comandos de Ejecución**
-
-Sigue estos pasos para instalar dependencias, generar el cliente Prisma y levantar el servidor:
-
-Instalar dependencias:
+**B. Instalacion de dependencias y ejecucion**
 
 ```shell
 npm install
