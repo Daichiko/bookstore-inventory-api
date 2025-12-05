@@ -4,7 +4,7 @@ Bienvenido al proyecto **Bookstore Inventory API**, una aplicación backend desa
 
 ---
 
-# ACTUALIZACION
+## ACTUALIZACION
 
 Con la ultima actualizacion el costo de los libros no se obtiene por la Api asociada, si no por la base de datos que almacena la tasa de cambio diaria que expone la Api, debido a ello si se quiere probar el funcionamiento del sistema en un corto periodo de tiempo se debe dirigir al siguiente archivo **"src/exchange-rate/exchange=rate=cron.service.ts"**, ya estando en el archivo puede modificar la linea 17 donde se situa el intervalo de ejecucion del cron job para establecer un plazo mas corto:
 
