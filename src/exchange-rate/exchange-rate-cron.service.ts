@@ -13,6 +13,7 @@ export class ExchangeRateCronService {
     private readonly prisma: PrismaService,
   ) {}
 
+  // Para efectos de prueba se puede cambiar a EVERY_MINUTE o EVERY_5_MINUTES
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, {
     name: 'fetchRates',
     timeZone: 'UTC',
