@@ -58,7 +58,7 @@ npx prisma generate
 Aplicar Migraciones de Prisma:
 
 ```shell
-npx prisma migrate dev --name init
+npx prisma migrate deploy
 ```
 
 Iniciar la Aplicación (Modo Desarrollo):
