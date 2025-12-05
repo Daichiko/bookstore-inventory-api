@@ -1,9 +1,9 @@
 -- CreateTable
 CREATE TABLE "exchange_rate_batches" (
     "id" SERIAL NOT NULL,
-    "time_last_update_unix" BIGINT NOT NULL,
+    "time_last_update_unix" TEXT NOT NULL,
     "time_last_update_utc" TIMESTAMP(3) NOT NULL,
-    "time_next_update_unix" BIGINT NOT NULL,
+    "time_next_update_unix" TEXT NOT NULL,
     "time_next_update_utc" TIMESTAMP(3) NOT NULL,
     "base_code" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

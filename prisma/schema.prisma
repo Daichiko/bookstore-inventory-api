@@ -36,9 +36,9 @@ model Book {
 model ExchangeRateBatch {
   id                      Int      @id @default(autoincrement())
   
-  timeLastUpdateUnix      BigInt   @map("time_last_update_unix")
+  timeLastUpdateUnix      String   @map("time_last_update_unix")
   timeLastUpdateUtc       DateTime @map("time_last_update_utc")
-  timeNextUpdateUnix      BigInt   @map("time_next_update_unix")
+  timeNextUpdateUnix      String   @map("time_next_update_unix")
   timeNextUpdateUtc       DateTime @map("time_next_update_utc")
   baseCode                String   @map("base_code") 
   

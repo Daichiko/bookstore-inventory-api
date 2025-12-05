@@ -2,9 +2,9 @@ export interface ExchangeRateBatch {
   id: number;
 
   result: string;
-  timeLastUpdateUnix: bigint;
+  timeLastUpdateUnix: string;
   timeLastUpdateUtc: Date;
-  timeNextUpdateUnix: bigint;
+  timeNextUpdateUnix: string;
   timeNextUpdateUtc: Date;
 
   baseCode: string;
