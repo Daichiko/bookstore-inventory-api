@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  HttpException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -9,13 +10,14 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from '@prisma/client';
-import { solicitudGet } from 'src/common/helpers/consultasExternas';
-import { ExchangeResponse } from 'src/common/interface/exchange-response.interface';
-import { api_exchange_url } from 'src/common/config/config';
+import { ExchangeRateService } from 'src/exchange-rate/exchange-rate.service';
 
 @Injectable()
 export class BooksService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private exchangeRateService: ExchangeRateService,
+  ) {}
 
   async create(createBookDto: CreateBookDto): Promise<Book> {
     const uniqueISBN = await this.prisma.book.findUnique({
@@ -87,7 +89,7 @@ export class BooksService {
     }
   }
 
-  async findOne(id: number): Promise<Book | null> {
+  async findOne(id: number): Promise<Book> {
     try {
       const book = await this.prisma.book.findUnique({
         where: { id },
@@ -246,23 +248,35 @@ export class BooksService {
       );
     }
 
+    let latestBatch;
+
     if (!conversion_rate_manual) {
       try {
-        if (api_exchange_url) {
-          const data = await solicitudGet<ExchangeResponse>({
-            url: api_exchange_url,
-          });
+        // if (api_exchange_url) {
+        //   const data = await solicitudGet<ExchangeResponse>({
+        //     url: api_exchange_url,
+        //   });
 
-          conversion_rate = data.conversion_rates.VES;
-        }
+        //   conversion_rate = data.conversion_rates.VES;
+        // }
+
+        latestBatch = await this.exchangeRateService.getLatestBatch();
+
+        conversion_rate = latestBatch.conversionRates.find(
+          (rate) => rate.targetCode === currency,
+        ).rate;
       } catch (error) {
-        console.log(error);
+        console.error(error);
+
+        throw new HttpException(
+          'No se encontraron tasas de cambio disponibles. Intente nuevamente más tarde.',
+          500,
+        );
       }
     }
 
-    let newBook: Book;
     try {
-      newBook = await this.prisma.book.update({
+      await this.prisma.book.update({
         where: { id: bookId },
         data: {
           sellingPriceLocal: Number(book.costUsd) * (profit_margin + 1),
@@ -278,12 +292,13 @@ export class BooksService {
     return {
       book_id: bookId,
       cost_usd: Number(book.costUsd),
-      exchange_rate: conversion_rate,
+      exchange_rate: Number(conversion_rate),
       cost_local: Number((Number(book.costUsd) * conversion_rate).toFixed(4)),
       margin_percentage: profit_margin * 100,
       selling_price_local: Number(book.costUsd) * (profit_margin + 1),
       currency,
       calculation_timestamp: new Date(),
+      rate_timestamp: latestBatch?.timeLastUpdateUtc,
     };
   }
 }
