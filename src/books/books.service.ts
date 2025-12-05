@@ -260,9 +260,8 @@ export class BooksService {
       }
     }
 
-    let newBook: Book;
     try {
-      newBook = await this.prisma.book.update({
+      await this.prisma.book.update({
         where: { id: bookId },
         data: {
           sellingPriceLocal: Number(book.costUsd) * (profit_margin + 1),

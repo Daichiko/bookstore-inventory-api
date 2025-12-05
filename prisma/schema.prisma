@@ -32,3 +32,30 @@ model Book {
 
   @@map("books")
 }
+
+model ExchangeRateBatch {
+  id                      Int      @id @default(autoincrement())
+  
+  timeLastUpdateUnix      BigInt   @map("time_last_update_unix")
+  timeLastUpdateUtc       DateTime @map("time_last_update_utc")
+  timeNextUpdateUnix      BigInt   @map("time_next_update_unix")
+  timeNextUpdateUtc       DateTime @map("time_next_update_utc")
+  baseCode                String   @map("base_code") 
+  
+  createdAt               DateTime @default(now()) @map("created_at")
+  conversionRates         ConversionRate[]
+
+  @@map("exchange_rate_batches")
+}
+
+model ConversionRate {
+  id                      Int      @id @default(autoincrement())
+  batchId                 Int      @map("batch_id")
+  batch                   ExchangeRateBatch @relation(fields: [batchId], references: [id])
+  targetCode              String   @map("target_code")
+  rate                    Decimal
+  createdAt               DateTime @default(now()) @map("created_at")
+
+  @@unique([batchId, targetCode])
+  @@map("conversion_rates")
+}
